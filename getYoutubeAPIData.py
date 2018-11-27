@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import os
+import json
 
 import google.oauth2.credentials
 
@@ -77,7 +78,7 @@ def build_resource(properties):
 def remove_empty_kwargs(**kwargs):
     good_kwargs = {}
     if kwargs is not None:
-        for key, value in kwargs.iteritems():
+        for key, value in kwargs.items():
             if value:
                 good_kwargs[key] = value
     return good_kwargs
@@ -91,7 +92,12 @@ def search_list_by_keyword(client, **kwargs):
         **kwargs
     ).execute()
 
-    return print_response(response)
+    text_file = open("Output.txt", "w")
+    text_file.write(json.dumps(response))
+    text_file.close()
+
+    return ''
+
 
 
 if __name__ == '__main__':
@@ -103,6 +109,6 @@ if __name__ == '__main__':
     search_list_by_keyword(client,
                            part='snippet',
                            maxResults=25,
-                           q='surfing',
+                           q='red dead online guide',
                            type='')
 
