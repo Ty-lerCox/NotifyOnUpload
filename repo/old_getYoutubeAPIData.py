@@ -2,10 +2,10 @@
 
 import os
 import json
-
 import google.oauth2.credentials
-
 import google_auth_oauthlib.flow
+
+from datetime import date, datetime, timedelta
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from google_auth_oauthlib.flow import InstalledAppFlow
@@ -92,23 +92,86 @@ def search_list_by_keyword(client, **kwargs):
         **kwargs
     ).execute()
 
-    text_file = open("Output.txt", "w")
+    text_file = open("searchData.json", "w")
+    text_file.write(json.dumps(response))
+    text_file.close()
+
+    return response
+
+def getVideoIds(responses):
+    result = ''
+    for x in responses['items']:
+        result += x['id']['videoId'] + ','
+    return result[:-1]
+
+def getChannelIds(responses):
+    result = ''
+    for x in responses['items']:
+        result += x['snippet']['channelId'] + ','
+    return result[:-1]
+
+def channels_list_by_id(client, **kwargs):
+    # See full sample for function
+    kwargs = remove_empty_kwargs(**kwargs)
+
+    response = client.channels().list(
+        **kwargs
+    ).execute()
+
+    text_file = open("channelData.json", "w")
+    text_file.write(json.dumps(response))
+    text_file.close()
+
+    return 'u'
+
+def videos_list_by_id(client, **kwargs):
+    # See full sample for function
+    kwargs = remove_empty_kwargs(**kwargs)
+
+    response = client.videos().list(
+        **kwargs
+    ).execute()
+
+    text_file = open("videoData.json", "w")
     text_file.write(json.dumps(response))
     text_file.close()
 
     return ''
 
 
-
 if __name__ == '__main__':
+
+    #Keywords = 'red dead online glitch'
+    #Keywords = 'black ops 4 glitches'
+    #Keywords = 'black ops 4'
+    #Keywords = 'blackout glitch'
+    #Keywords = 'fallout 76 glitch'
+    Keywords = 'red dead online guide'
+    #Keywords = 'cwl update'
+
     # When running locally, disable OAuthlib's HTTPs verification. When
     # running in production *do not* leave this option enabled.
     os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
     client = get_authenticated_service()
 
-    search_list_by_keyword(client,
+    searchList = search_list_by_keyword(client,
                            part='snippet',
-                           maxResults=25,
-                           q='red dead online guide',
-                           type='')
+                           maxResults=50,
+                           q=Keywords,
+                           type='video',
+                           publishedAfter=str(date.today()) + 'T00:00:00Z'
+                           #publishedAfter=str(date.today() - timedelta(days=30)) + 'T00:00:00Z'
+                           )
 
+    channelIDs = getChannelIds(searchList)
+    videoIDs = getVideoIds(searchList)
+    
+    channelList = channels_list_by_id(client,
+        part='statistics',
+        id=channelIDs)
+
+    videoList = videos_list_by_id(client,
+        part='contentDetails,statistics',
+        id=videoIDs)
+
+    print('Search complete: ' + Keywords)
