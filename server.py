@@ -46,7 +46,7 @@ def index():
     #Keywords = 'fallout 76 glitch'
     #Keywords = 'red dead online guide'
     #Keywords = 'cwl update'
-  l
+  
 
   return '<a href="/run/fallout glitches/">Run Fallout Glitches</a><a href="/run/red dead online glitch/">Run Red Dead Online Glitch</a></br>'
 
