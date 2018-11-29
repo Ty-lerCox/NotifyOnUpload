@@ -2,12 +2,12 @@
 
 import os
 import json
-from flask import Flask, session, redirect, url_for, request, jsonify
-
-from datetime import date, datetime
 import google.oauth2.credentials
 import google_auth_oauthlib.flow
 import googleapiclient.discovery
+
+from flask import Flask, session, redirect, url_for, request, jsonify
+from datetime import date, datetime
 
 # The CLIENT_SECRETS_FILE variable specifies the name of a file that contains
 # the OAuth 2.0 information for this application, including its client_id and
