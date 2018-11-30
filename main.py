@@ -201,4 +201,4 @@ if __name__ == '__main__':
   # When running locally, disable OAuthlib's HTTPs verification. When
   # running in production *do not* leave this option enabled.
   os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '0'
-  app.run('localhost', 8080, debug=False)
+  app.run('localhost', 8080, debug=True)
