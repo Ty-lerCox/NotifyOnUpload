@@ -3,8 +3,8 @@ import os
 import json
 import google.oauth2.credentials
 import googleapiclient.discovery
-import google_auth_oauthlib.flow
 
+from google_auth_oauthlib.flow import Flow
 from flask import Flask, session, redirect, url_for, request, jsonify
 from datetime import date, datetime
 
@@ -52,16 +52,14 @@ def index():
 def run(search):
     if 'credentials' not in session:
         return redirect('authorize')
-
     run_script(search)
-
     return 'Script Processed: ' + search
 
 @app.route('/authorize')
 def authorize():
     # Create a flow instance to manage the OAuth 2.0 Authorization Grant Flow
     # steps.
-    flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(
+    flow = Flow.from_client_secrets_file(
         CLIENT_SECRETS_FILE, scopes=SCOPES)
     flow.redirect_uri = url_for('oauth2callback', _external=True)
     print(flow)
@@ -84,7 +82,7 @@ def oauth2callback():
     # Specify the state when creating the flow in the callback so that it can
     # verify the authorization server response.
     state = session['state']
-    flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(
+    flow = Flow.from_client_secrets_file(
         CLIENT_SECRETS_FILE, scopes=SCOPES, state=state)
     flow.redirect_uri = url_for('oauth2callback', _external=True)
 
