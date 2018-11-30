@@ -1,4 +1,2 @@
-runtime: python
-
-runtime_config:
-    python_version: 3.7
+runtime: python37
+entrypoint: gunicorn -b :$PORT main:app
